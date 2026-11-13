@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "app.clients.cross.origins",
+      "type": "java.lang.String",
+      "description": "Liste des origines autorisées pour les requêtes CORS."
+    }
+  ]
+}
