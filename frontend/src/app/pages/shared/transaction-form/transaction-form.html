@@ -1,0 +1,71 @@
+<!-- Transactions form -->
+<section class="mb-12">
+
+    <div class="mb-5 flex items-center gap-3">
+        <span class="h-6 w-1 bg-teal-600"></span>
+        <h2 class="text-lg font-semibold text-gray-800">
+            Opérations bancaires
+        </h2>
+    </div>
+
+    @if (errorMessage()) {
+      <app-alert [message]="errorMessage()" type="error" />
+    }
+
+    <form #form="ngForm" (ngSubmit)="form.valid && createTransaction()" class="grid grid-cols-2 lg:grid-cols-5 gap-3">
+        <select
+            required
+            name="operation"
+            [(ngModel)]="newTransaction.operation"
+            (ngModelChange)="onOperationChange($event)"
+            class="min-w-40 flex-1 border border-gray-300 bg-white px-4 py-2 text-base outline-none transition focus:border-teal-600 focus:ring-1 focus:ring-teal-600"
+        >
+            <option value="" [ngValue]="null">-------- OPERATION --------</option>
+            @for (operation of operations; track operation) {
+                <option [value]="operation">{{operation}}</option>
+            }
+        </select>
+        <input
+            type="text"
+            name="numeroSource"
+            placeholder="Numéro Source"
+            [(ngModel)]="newTransaction.numeroSource"
+            required
+            disabled
+            class="min-w-40 flex-1 border border-gray-300 bg-white px-4 py-2 text-base outline-none transition focus:border-teal-600 focus:ring-1 focus:ring-teal-600 disabled:bg-gray-300"
+        />
+
+        <input
+            type="text"
+            name="numeroDestination"
+            placeholder="Numéro destination"
+            [(ngModel)]="newTransaction.numeroDestination"
+            required
+            [disabled]="newTransaction.operation!==operationsEnum.VIREMENT"
+            class="min-w-40 flex-1 border border-gray-300 bg-white px-4 py-2 text-base outline-none transition focus:border-teal-600 focus:ring-1 focus:ring-teal-600 disabled:bg-gray-300"
+        />
+
+
+        <input
+            required
+            type="number"
+            name="montant"
+            placeholder="Montant"
+            [(ngModel)]="newTransaction.montant"
+            [disabled]="!newTransaction.operation"
+            min="0.01"
+            step="0.01"
+            class="min-w-56 flex-1 border border-gray-300 bg-white px-4 py-2 text-base outline-none transition focus:border-teal-600 focus:ring-1 focus:ring-teal-600 disabled:bg-gray-300"
+        />
+
+        <button
+            type="submit"
+            [disabled]="form.invalid || !newTransaction.operation || loading()"
+            class="cursor-pointer border border-teal-700 bg-teal-700 px-6 py-2 font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:bg-gray-500"
+        >
+            + Créer
+        </button>
+    </form>
+
+    
+</section>

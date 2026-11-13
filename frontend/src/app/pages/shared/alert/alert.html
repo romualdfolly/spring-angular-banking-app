@@ -1,0 +1,12 @@
+<div 
+    role="alert"
+    class="border px-4 py-3 my-2 text-sm text-center font-medium"
+    [class.bg-teal-100]="type === 'success'"
+    [class.border-teal-300]="type === 'success'"
+    [class.text-teal-800]="type === 'success'"
+    [class.bg-red-100]="type === 'error'"
+    [class.border-red-300]="type === 'error'"
+    [class.text-red-800]="type === 'error'"
+>
+    {{ message }}
+</div>

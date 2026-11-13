@@ -1,0 +1,47 @@
+<div class="flex min-h-screen flex-col bg-gray-50">
+
+  <!-- Navbar -->
+  <nav class="sticky top-0 z-50 border-b border-teal-800 bg-teal-900 shadow-sm">
+    <div class="relative flex h-16 items-center justify-between px-6">
+
+        <!-- Logo -->
+        <app-nav-link link="/">
+            <div class="flex items-center gap-3 text-white">
+                <img
+                    src="favicon.ico"
+                    alt="Logo"
+                    class="h-8 w-8"
+                />
+
+                <span class="text-lg font-bold tracking-tight">
+                    {{ title() }}
+                </span>
+            </div>
+        </app-nav-link>
+
+        <!-- Liens -->
+        <div class="absolute left-1/2 flex -translate-x-1/2 items-center gap-8">
+
+            <app-nav-link link="clients" [defaultActive]="true">
+                Clients
+            </app-nav-link>
+
+            <app-nav-link link="comptes">
+                Comptes
+            </app-nav-link>
+
+            <app-nav-link link="transactions">
+                Transactions
+            </app-nav-link>
+
+        </div>
+
+    </div>
+  </nav>
+
+  <!-- pages -->
+   <main class="mx-10 flex-1">
+    <router-outlet />
+  </main>
+
+</div>

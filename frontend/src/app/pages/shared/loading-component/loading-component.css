@@ -1,0 +1,20 @@
+.loading-bar li {
+  animation: animate 0.7s infinite alternate ease-in-out;
+}
+
+@keyframes animate {
+  0%, 25%, 50%, 75% {
+    transform: scaleY(1);
+  }
+
+  100% {
+    transform: scaleY(2);
+  }
+}
+
+.loading-bar li:nth-child(1) { animation-delay: 0s; }
+.loading-bar li:nth-child(2) { animation-delay: .1s; }
+.loading-bar li:nth-child(3) { animation-delay: .2s; }
+.loading-bar li:nth-child(4) { animation-delay: .3s; }
+.loading-bar li:nth-child(5) { animation-delay: .4s; }
+.loading-bar li:nth-child(6) { animation-delay: .5s; }

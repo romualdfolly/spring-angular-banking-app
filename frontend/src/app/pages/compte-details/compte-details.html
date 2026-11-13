@@ -1,0 +1,132 @@
+
+<div class="mx-auto min-h-full px-6 py-10">
+
+    @if (loading()) {
+        <div class="flex h-100 flex-col justify-end py-20 text-center text-teal-700">
+            <app-loading-component>
+                Chargement des informations du compte...
+            </app-loading-component>
+        </div>
+    } @else if (compte(); as c) {
+
+        <!-- Retour -->
+        <a
+            [routerLink]="['/clients', c.clientId]"
+            class="mb-8 inline-block text-sm font-medium text-teal-700 transition hover:text-teal-900"
+        >
+            ← Retour aux détails du client
+        </a>
+
+        <!-- Informations du compte -->
+        <div class="mb-12 flex flex-wrap items-center justify-between gap-6">
+
+            <div>
+                <p class="mb-2 text-sm font-semibold uppercase tracking-widest text-teal-600">
+                    Gestion bancaire
+                </p>
+
+                <h1 class="text-3xl font-bold tracking-tight text-gray-900">
+                    Compte {{ c.numero }}
+                </h1>
+
+                <p class="mt-2 text-gray-500">
+                    Informations et opérations bancaires
+                </p>
+            </div>
+
+            <div class="border-l-4 border-teal-600 bg-teal-50 px-6 py-5">
+                <p class="text-sm font-medium uppercase tracking-wider text-teal-700">
+                    Solde disponible
+                </p>
+
+                <p class="mt-2 text-3xl font-bold text-teal-900">
+                    {{ c.solde | number:'1.2-2' }} CHF
+                </p>
+            </div>
+
+        </div>
+
+        <!-- Transactions form -->
+        <app-transaction-form [compte]="c" (transactionEvent)="updateFrontTransactionsAndCompte($event)"/>
+
+        <!-- transactions -->
+        <section>
+
+            <div class="mb-5 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <span class="h-6 w-1 bg-teal-600"></span>
+                    <h2 class="text-lg font-semibold text-gray-800">
+                        Historique des transactions
+                    </h2>
+                </div>
+
+                <span class="bg-teal-50 px-3 py-1 text-sm font-medium text-teal-700">
+                    {{ transactions().length }} transactions
+                </span>
+            </div>
+
+            <div class="overflow-x-auto border border-gray-200">
+                <table class="w-full border-collapse text-left">
+
+                    <thead>
+                        <tr class="bg-teal-800 text-sm uppercase tracking-wider text-white">
+                            <th class="px-6 py-4 font-semibold">ID</th>
+                            <th class="px-6 py-4 font-semibold">Type</th>
+                            <th class="px-6 py-4 font-semibold">Montant</th>
+                            <th class="px-6 py-4 font-semibold">Source</th>
+                            <th class="px-6 py-4 font-semibold">Destination</th>
+                            <th class="px-6 py-4 font-semibold">Date</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @for (transaction of transactions(); track $index; let odd = $odd) {
+                            <tr
+                                class="border-b border-gray-100 transition hover:bg-teal-100/60"
+                                [class.bg-teal-50]="odd"
+                                [class.bg-white]="!odd"
+                            >
+                                <td class="px-6 py-4 font-bold text-sm text-teal-700">
+                                    #{{ $index + 1 }}
+                                </td>
+
+                                <td class="px-6 py-4 font-semibold text-gray-900">
+                                    {{ transaction.type }}
+                                </td>
+
+                                <td class="px-6 py-4 font-semibold text-teal-700">
+                                    {{ transaction.montant }} CHF
+                                </td>
+
+                                <td class="px-6 py-4 text-gray-700">
+                                    {{ transaction.compteSource || '—' }}
+                                </td>
+
+                                <td class="px-6 py-4 text-gray-700">
+                                    {{ transaction.compteDestination || '—' }}
+                                </td>
+
+                                <td class="px-6 py-4 text-sm text-gray-600">
+                                    {{ transaction.dateTransaction | date:'dd/MM/yyyy HH:mm' }}
+                                </td>
+                            </tr>
+                        } @empty {
+                            <tr>
+                                <td colspan="6" class="px-6 py-16 text-center text-gray-500">
+                                    Aucune transaction pour ce compte.
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+        </section>
+
+    } @else {
+        <p class="py-16 text-center text-gray-500">
+            Compte introuvable.
+        </p>
+    }
+
+</div>

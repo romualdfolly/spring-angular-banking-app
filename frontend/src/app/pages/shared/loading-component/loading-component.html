@@ -1,0 +1,8 @@
+<ul class="loading-bar relative flex list-none justify-center" aria-label="Chargement" role="status">
+  @for (i of [].constructor(nChild); track $index) {
+    <li
+      class="mx-1 my-0 h-10 w-0.5 bg-teal-600"
+      [class]="liClassName"
+    ></li>
+  }
+</ul>

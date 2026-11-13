@@ -1,0 +1,89 @@
+<div class="mx-auto w-full px-6 py-10">
+    <!-- Header -->
+    <div class="mb-10">
+        <p class="mb-2 text-sm font-semibold uppercase tracking-widest text-teal-600">
+            Gestion bancaire
+        </p>
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900">
+            Transactions
+        </h1>
+        <p class="mt-2 text-gray-500">
+            Consultez l'historique de toutes les opérations bancaires.
+        </p>
+    </div>
+
+    <!-- Transactions -->
+    <section>
+        <div class="mb-5 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <span class="h-6 w-1 bg-teal-600"></span>
+                <h2 class="text-lg font-semibold text-gray-800">
+                    Historique des transactions
+                </h2>
+            </div>
+
+            <span class="bg-teal-50 px-3 py-1 text-sm font-medium text-teal-700">
+                {{ transactions().length }} transactions
+            </span>
+        </div>
+
+        @if (loading()) {
+            <app-loading-component />
+        } @else {
+            <div class="overflow-x-auto border border-gray-200">
+                <table class="w-full border-collapse text-left">
+                    <thead>
+                        <tr class="bg-teal-800 text-sm uppercase tracking-wider text-white">
+                            <th class="px-6 py-4 font-semibold">ID</th>
+                            <th class="px-6 py-4 font-semibold">Type</th>
+                            <th class="px-6 py-4 font-semibold">Montant</th>
+                            <th class="px-6 py-4 font-semibold">Source</th>
+                            <th class="px-6 py-4 font-semibold">Destination</th>
+                            <th class="px-6 py-4 font-semibold">Date</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @for (transaction of transactions(); track transaction.id; let odd = $odd) {
+                            <tr
+                                class="border-b border-gray-100 transition hover:bg-teal-100/60"
+                                [class.bg-teal-50]="odd"
+                                [class.bg-white]="!odd"
+                            >
+                                <td class="px-6 py-4 text-sm font-bold text-teal-700">
+                                    #{{ transaction.id }}
+                                </td>
+
+                                <td class="px-6 py-4 font-semibold text-gray-900">
+                                    {{ transaction.type }}
+                                </td>
+
+                                <td class="px-6 py-4 font-semibold text-teal-700">
+                                    {{ transaction.montant }} CHF
+                                </td>
+
+                                <td class="px-6 py-4 text-gray-700">
+                                    {{ transaction.compteSource || '—' }}
+                                </td>
+
+                                <td class="px-6 py-4 text-gray-700">
+                                    {{ transaction.compteDestination || '—' }}
+                                </td>
+
+                                <td class="px-6 py-4 text-sm text-gray-600">
+                                    {{ transaction.dateTransaction | date:'dd/MM/yyyy HH:mm' }}
+                                </td>
+                            </tr>
+                        } @empty {
+                            <tr>
+                                <td colspan="6" class="px-6 py-16 text-center text-gray-500">
+                                    Aucune transaction bancaire disponible.
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
+</div>

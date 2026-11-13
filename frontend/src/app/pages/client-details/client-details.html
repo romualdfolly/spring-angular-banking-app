@@ -1,0 +1,149 @@
+<div class="mx-auto min-h-full px-6 py-10">
+
+  @if (loading()) {
+    <div class="py-20 h-100 text-center text-teal-700 flex flex-col justify-end">
+      <app-loading-component>
+        Chargement des informations du client...
+      </app-loading-component>
+      
+    </div>
+  } @else if (client(); as c) {
+
+    <a
+      routerLink="clients"
+      class="mb-8 inline-block text-sm font-medium text-teal-700 hover:text-teal-900"
+    >
+      ← Retour aux clients
+    </a>
+
+    <!-- Informations du client -->
+    <div class="flex justify-between">
+        <div class="mb-10">
+            <p class="mb-2 text-sm font-semibold uppercase tracking-widest text-teal-600">
+                Gestion bancaire
+            </p>
+
+            <h1 class="text-3xl font-bold tracking-tight text-gray-900">
+                {{ c.prenom }} {{ c.nom }}
+            </h1>
+
+            <p class="mt-2 text-gray-500">
+                Client #{{ c.id }} · {{ c.email }}
+            </p>
+        </div>
+
+        <div class="mb-10 border-l-4 border-teal-600 bg-teal-50 px-6 py-5">
+            <p class="text-sm font-medium uppercase tracking-wider text-teal-700">
+                Solde total des comptes
+            </p>
+
+            <p class="mt-2 text-3xl font-bold text-teal-900">
+                {{ totalSolde().toFixed(2) }} CHF
+            </p>
+        </div>
+    </div>
+
+    <!-- Création d'un compte -->
+    <section class="mb-12">
+      <div class="mb-5 flex items-center gap-3">
+        <span class="h-6 w-1 bg-teal-600"></span>
+        <h2 class="text-lg font-semibold text-gray-800">
+          Ouvrir un compte
+        </h2>
+      </div>
+
+      @if(errorMessage()) {
+        <app-alert [message]="errorMessage()" type="error" />
+      }
+
+      <form
+        #form="ngForm" (ngSubmit)="form.valid && createCompte()"
+        class="flex flex-wrap items-center gap-3"
+      >
+        <input
+          type="text"
+          name="numero"
+          placeholder="Numéro du compte (ex. CH001)"
+          [(ngModel)]="newCompte.numero"
+          required
+          class="uppercase min-w-64 flex-1 border border-gray-300 bg-white px-4 py-3 text-base outline-none transition focus:border-teal-600 focus:ring-1 focus:ring-teal-600"
+        />
+
+        <button
+          type="submit"
+          [disabled]="form.invalid || loading()"
+          class="cursor-pointer border border-teal-700 bg-teal-700 px-6 py-3 font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:bg-gray-500"
+        >
+          + Créer un compte
+        </button>
+      </form>
+    </section>
+
+    <!-- Liste des comptes -->
+    <section>
+      <div class="mb-5 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="h-6 w-1 bg-teal-600"></span>
+          <h2 class="text-lg font-semibold text-gray-800">
+            Comptes du client
+          </h2>
+        </div>
+
+        <span class="bg-teal-50 px-3 py-1 text-sm font-medium text-teal-700">
+          {{ comptes().length }} comptes
+        </span>
+      </div>
+
+      <div class="overflow-x-auto border border-gray-200">
+        <table class="w-full border-collapse text-left">
+          <thead>
+            <tr class="bg-teal-800 text-sm uppercase tracking-wider text-white">
+              <th class="px-6 py-4 font-semibold">Numéro de compte</th>
+              <th class="px-6 py-4 font-semibold">Solde</th>
+              <th class="px-6 py-4 text-right font-semibold">Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (compte of comptes(); track compte.numero; let odd = $odd) {
+              <tr
+                class="border-b border-gray-100 transition hover:bg-teal-100/60"
+                [class.bg-teal-50]="odd"
+                [class.bg-white]="!odd"
+              >
+                <td class="px-6 py-4 font-mono font-semibold text-gray-900">
+                  {{ compte.numero }}
+                </td>
+
+                <td class="px-6 py-4 font-semibold text-teal-700">
+                  {{ compte.solde }} CHF
+                </td>
+
+                <td class="px-6 py-4 text-right">
+                  <a
+                    [routerLink]="['/comptes', compte.numero]"
+                    class="inline-block border border-teal-700 px-4 py-2 text-sm font-semibold text-teal-800 transition hover:bg-teal-700 hover:text-white"
+                  >
+                    Voir les détails →
+                  </a>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="3" class="px-6 py-16 text-center text-gray-500">
+                  Ce client ne possède aucun compte.
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  } @else {
+    <p class="py-16 text-center text-gray-500">
+      Client introuvable.
+    </p>
+  }
+
+</div>

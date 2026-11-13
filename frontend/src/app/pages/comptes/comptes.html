@@ -1,0 +1,79 @@
+<div class="mx-auto w-full px-6 py-10">
+    <!-- Header -->
+    <div class="mb-10">
+        <p class="mb-2 text-sm font-semibold uppercase tracking-widest text-teal-600">
+            Gestion bancaire
+        </p>
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900">
+            Comptes
+        </h1>
+        <p class="mt-2 text-gray-500">
+            Consultez tous les comptes bancaires et leurs soldes.
+        </p>
+    </div>
+
+    <!-- Comptes -->
+    <section>
+        <div class="mb-5 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <span class="h-6 w-1 bg-teal-600"></span>
+                <h2 class="text-lg font-semibold text-gray-800">
+                    Liste des comptes
+                </h2>
+            </div>
+
+            <span class="bg-teal-50 px-3 py-1 text-sm font-medium text-teal-700">
+                {{ comptes().length }} comptes
+            </span>
+        </div>
+
+        @if (loading()) {
+            <app-loading-component />
+        } @else {
+            <div class="overflow-x-auto border border-gray-200">
+                <table class="w-full border-collapse text-left">
+                    <thead>
+                        <tr class="bg-teal-800 text-sm uppercase tracking-wider text-white">
+                            <th class="px-6 py-4 font-semibold">Numéro de compte</th>
+                            <th class="px-6 py-4 font-semibold">Solde</th>
+                            <th class="px-6 py-4 text-right font-semibold">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @for (compte of comptes(); track compte.numero; let odd = $odd) {
+                            <tr
+                                class="border-b border-gray-100 transition hover:bg-teal-100/60"
+                                [class.bg-teal-50]="odd"
+                                [class.bg-white]="!odd"
+                            >
+                                <td class="px-6 py-4 font-mono font-semibold text-gray-900">
+                                    {{ compte.numero }}
+                                </td>
+
+                                <td class="px-6 py-4 font-semibold text-teal-700">
+                                    {{ compte.solde }} CHF
+                                </td>
+
+                                <td class="px-6 py-4 text-right">
+                                    <a
+                                        [routerLink]="['/comptes', compte.numero]"
+                                        class="inline-block border border-teal-700 px-4 py-2 text-sm font-semibold text-teal-800 transition hover:bg-teal-700 hover:text-white"
+                                    >
+                                        Voir les détails →
+                                    </a>
+                                </td>
+                            </tr>
+                        } @empty {
+                            <tr>
+                                <td colspan="3" class="px-6 py-16 text-center text-gray-500">
+                                    Aucun compte bancaire disponible.
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
+</div>

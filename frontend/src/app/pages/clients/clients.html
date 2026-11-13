@@ -1,0 +1,131 @@
+<div class="mx-auto px-6 py-10">
+  <div class="mb-10">
+    <p class="mb-2 text-sm font-semibold uppercase tracking-widest text-teal-600">
+      Gestion bancaire
+    </p>
+    <h1 class="text-3xl font-bold tracking-tight text-gray-900">Clients</h1>
+    <p class="mt-2 text-gray-500">Gérez vos clients et consultez leurs comptes.</p>
+  </div>
+
+  <!-- Creation client -->
+  <section class="mb-12">
+    <div class="mb-5 flex items-center gap-3">
+      <span class="h-6 w-1 bg-teal-600"></span>
+      <h2 class="text-lg font-semibold text-gray-800">Nouveau client</h2>
+    </div>
+
+    @if (errorMessage()) {
+      <app-alert [message]="errorMessage()" type="error" />
+    }
+
+    <form #form="ngForm" (ngSubmit)="form.valid && createClient()" class="flex flex-wrap items-center gap-3">
+      <input
+        type="text"
+        name="nom"
+        placeholder="Nom"
+        [(ngModel)]="newClient.nom"
+        required
+        class="min-w-40 flex-1 border border-gray-300 bg-white px-4 py-2 text-base outline-none transition focus:border-teal-600 focus:ring-1 focus:ring-teal-600"
+      />
+
+      <input
+        type="text"
+        name="prenom"
+        placeholder="Prénom"
+        [(ngModel)]="newClient.prenom"
+        required
+        class="min-w-40 flex-1 border border-gray-300 bg-white px-4 py-2 text-base outline-none transition focus:border-teal-600 focus:ring-1 focus:ring-teal-600"
+      />
+
+      <input
+        type="email"
+        name="email"
+        placeholder="Adresse email"
+        [(ngModel)]="newClient.email"
+        required
+        class="min-w-56 flex-1 border border-gray-300 bg-white px-4 py-2 text-base outline-none transition focus:border-teal-600 focus:ring-1 focus:ring-teal-600"
+      />
+
+      <button
+        type="submit"
+        [disabled]="form.invalid "
+        class="cursor-pointer border border-teal-700 bg-teal-700 px-6 py-2 font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:bg-gray-500"
+      >
+        + Créer un client
+      </button>
+    </form>
+  </section>
+
+  <!-- Liste des clients -->
+  <section>
+    <div class="mb-5 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="h-6 w-1 bg-teal-600"></span>
+        <h2 class="text-lg font-semibold text-gray-800">Liste des clients</h2>
+      </div>
+
+      <span class="bg-teal-50 px-3 py-1 text-sm font-medium text-teal-700">
+        {{ clients().length }} clients
+      </span>
+    </div>
+
+    @if (loading()) {
+      <div class="py-16 text-center text-teal-700">
+        <app-loading-component />
+      </div>
+    } @else {
+      <div class="overflow-x-auto border border-gray-200">
+        <table class="w-full border-collapse text-left">
+          <thead>
+            <tr class="bg-teal-800 text-sm uppercase tracking-wider text-white">
+              <th class="px-6 py-4 font-semibold">ID</th>
+              <th class="px-6 py-4 font-semibold">Nom</th>
+              <th class="px-6 py-4 font-semibold">Prénom</th>
+              <th class="px-6 py-4 font-semibold">Email</th>
+              <th class="px-6 py-4 text-right font-semibold">Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (client of clients(); track $index; let odd = $odd) {
+              <tr
+                class="border-b border-gray-100 transition hover:bg-teal-100/60"
+                [class.bg-teal-50]="odd"
+                [class.bg-white]="!odd"
+              >
+                <td class="px-6 py-4 font-bold text-teal-700">#{{ $index + 1 }}</td>
+
+                <td class="px-6 py-4 font-semibold text-gray-900">
+                  {{ client.nom }}
+                </td>
+
+                <td class="px-6 py-4 text-gray-700">
+                  {{ client.prenom }}
+                </td>
+
+                <td class="px-6 py-4 text-gray-600">
+                  {{ client.email }}
+                </td>
+
+                <td class="px-6 py-4 text-right">
+                  <a
+                    [routerLink]="['/clients', client.id]"
+                    class="inline-block border border-teal-700 px-4 py-2 text-sm font-semibold text-teal-800 transition hover:bg-teal-700 hover:text-white"
+                  >
+                    Voir les détails →
+                  </a>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="5" class="px-6 py-16 text-center text-gray-500">
+                  Aucun client trouvé.
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </section>
+</div>
